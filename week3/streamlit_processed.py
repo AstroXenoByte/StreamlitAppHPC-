@@ -5,14 +5,26 @@ import matplotlib.pyplot as plt
 
 st.title("Cluster Resource Usage Dashboard")
 
+#---------------------------
 @st.cache_data
-url ="https://drive.google.com/file/d/10A9b8uqQH0We8jnyEwvs0OrGgXLzwjHD/view?usp=drive_link"
-def load_data():
-    df = pd.read_csv(url)
+def load_data(uploaded_file):
+    df = pd.read_csv(uploaded_file)
     df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
     df = df.dropna(subset=["timestamp"]).sort_values("timestamp")
     return df
 
+st.title("Cluster Resource Usage Dashboard")
+
+uploaded_file = st.file_uploader("Upload your processed_logs.csv file", type=["csv"])
+
+if uploaded_file is not None:
+    df = load_data(uploaded_file)
+    st.success("File uploaded and processed successfully!")
+    st.write(df.head())
+else:
+    st.info("Please upload your processed_logs.csv file to view the dashboard.")
+
+#---------------------------
 df = load_data()
 
 st.write("### Summary Statistics")
