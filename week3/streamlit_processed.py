@@ -23,7 +23,7 @@ else:
     st.info("Please upload your processed_logs.csv file to view the dashboard.")
 
 #---------------------------
-df = load_data()
+df = load_data(uploaded_file)
 
 st.write("### Summary Statistics")
 st.write(df.describe())
