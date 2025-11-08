@@ -13,8 +13,6 @@ def load_data(uploaded_file):
     df = df.dropna(subset=["timestamp"]).sort_values("timestamp")
     return df
 
-st.title("Cluster Resource Usage Dashboard")
-
 uploaded_file = st.file_uploader("Upload your processed_logs.csv file", type=["csv"])
 
 if uploaded_file is not None:
