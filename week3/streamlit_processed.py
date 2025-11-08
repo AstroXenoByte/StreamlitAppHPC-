@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 st.title("Cluster Resource Usage Dashboard")
 
 @st.cache_data
+url ="https://drive.google.com/file/d/10A9b8uqQH0We8jnyEwvs0OrGgXLzwjHD/view?usp=drive_link"
 def load_data():
-    df = pd.read_csv("processed_logs.csv")
+    df = pd.read_csv(url)
     df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
     df = df.dropna(subset=["timestamp"]).sort_values("timestamp")
     return df
