@@ -259,9 +259,9 @@ log_option = st.selectbox("Select log to view:", [
 ])
 
 log_paths = {
-    "Nginx Access Log": "/var/log/nginx/access.log",
-    "Nginx Error Log": "/var/log/nginx/error.log",
-    "Streamlit Log": "/home/runtime/logs/streamlit.log"
+    "Nginx Access Log": "logs/access.log",
+    "Nginx Error Log": "logs/error.log",
+    "Streamlit Log": "logs/streamlit.log"
 }
 
 logs_display = read_last_lines(log_paths[log_option], num_lines=50)
