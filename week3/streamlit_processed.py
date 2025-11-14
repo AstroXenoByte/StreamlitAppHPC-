@@ -239,33 +239,5 @@ st.write(filtered_df.tail(1))
 st.caption("Data source: uploaded processed_logs.csv")
 
 
-###############################
-#Heaalth and logs section
-###############################
 
-def read_last_lines(file_path, num_lines=20):
-    """Read the last `num_lines` lines from a file."""
-    if not os.path.exists(file_path):
-        return f"Log file not found: {file_path}"
-    with open(file_path, 'r') as f:
-        lines = f.readlines()
-    return ''.join(lines[-num_lines:])
-
-st.header("Health & Logs Monitor")
-
-log_option = st.selectbox("Select log to view:", [
-    "Nginx Access Log",
-    "Nginx Error Log",
-    "Streamlit Log"
-])
-
-log_paths = {
-    "Nginx Access Log": "logs/access.log",
-    "Nginx Error Log": "logs/error.log",
-    "Streamlit Log": "logs/streamlit.log"
-}
-
-logs_display = read_last_lines(log_paths[log_option], num_lines=50)
-
-st.text_area(f"Last 50 lines of {log_option}", logs_display, height=400)
 
