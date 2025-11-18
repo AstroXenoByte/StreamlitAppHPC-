@@ -1,61 +1,46 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-import os
+from datetime import datetime, timedelta
 
-st.title("Cluster Resource Usage Dashboard")
+# ------------------- CONFIG -------------------
+st.set_page_config(page_title="HPC Cluster Dashboard", layout="wide")
 
-#----------------------------------------------------
-# File Upload
-#----------------------------------------------------
-uploaded_file = st.file_uploader("Upload processed_logs.csv", type=["csv"])
-
-if uploaded_file is None:
-    st.info("Please upload your processed_logs.csv file to view the dashboard.")
-    st.stop()
-
-#----------------------------------------------------
-# Load Data After Upload
-#----------------------------------------------------
+# ------------------- LOAD DATA -------------------
 @st.cache_data
-def load_data(file):
-    df = pd.read_csv(file)
+def load_data():
+    df = pd.read_csv("processed_logs.csv")
     df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
     df = df.dropna(subset=["timestamp"]).sort_values("timestamp")
     return df
 
-df = load_data(uploaded_file)
-st.success("File uploaded successfully!")
-st.write(df.head())
+df = load_data()
 
-#----------------------------------------------------
-# Date Filter Sidebar
-#----------------------------------------------------
-st.sidebar.write("### Filter by Date")
+# ------------------- SIDEBAR -------------------
+with st.sidebar:
+    st.title("HPC Cluster Dashboard")
+    st.header("⚙️ Filters")
 
-years = sorted(df["timestamp"].dt.year.unique())
-selected_year = st.sidebar.selectbox("Year (or leave blank)", options=[""] + [str(y) for y in years])
+    years = sorted(df["timestamp"].dt.year.unique())
+    selected_year = st.selectbox("Year", options=[""] + [str(y) for y in years])
 
-selected_month = ""
-selected_day = ""
+    selected_month = ""
+    selected_day = ""
 
-if selected_year != "":
-    selected_year = int(selected_year)
-    months = sorted(df[df["timestamp"].dt.year == selected_year]["timestamp"].dt.month.unique())
-    selected_month = st.sidebar.selectbox("Month (optional)", options=[""] + [str(m) for m in months])
+    if selected_year != "":
+        selected_year = int(selected_year)
+        months = sorted(df[df["timestamp"].dt.year == selected_year]["timestamp"].dt.month.unique())
+        selected_month = st.selectbox("Month", options=[""] + [str(m) for m in months])
 
-    if selected_month != "":
-        selected_month = int(selected_month)
-        days = sorted(df[
-            (df["timestamp"].dt.year == selected_year) &
-            (df["timestamp"].dt.month == selected_month)
-        ]["timestamp"].dt.day.unique())
-        selected_day = st.sidebar.selectbox("Day (optional)", options=[""] + [str(d) for d in days])
+        if selected_month != "":
+            selected_month = int(selected_month)
+            days = sorted(df[
+                (df["timestamp"].dt.year == selected_year) &
+                (df["timestamp"].dt.month == selected_month)
+            ]["timestamp"].dt.day.unique())
+            selected_day = st.selectbox("Day", options=[""] + [str(d) for d in days])
 
-#----------------------------------------------------
-# Filtering dataframe
-#----------------------------------------------------
+# ------------------- FILTER DATA -------------------
 filtered_df = df.copy()
 
 if selected_year != "":
@@ -67,177 +52,149 @@ if selected_month != "":
 if selected_day != "":
     filtered_df = filtered_df[filtered_df["timestamp"].dt.day == selected_day]
 
-#----------------------------------------------------
-# Summary
-#----------------------------------------------------
-st.write("### Summary Statistics")
-st.write(filtered_df.describe())
+# ------------------- METRIC DELTA -------------------
+def calculate_delta(df, column):
+    if len(df) < 2:
+        return 0, 0
+    current_value = df[column].iloc[-1]
+    previous_value = df[column].iloc[-2]
+    delta = current_value - previous_value
+    percent = (delta / previous_value) * 100 if previous_value != 0 else 0
+    return delta, percent
 
-#----------------------------------------------------
-# CPU Gauge
-#----------------------------------------------------
-st.write("### CPU Utilization Gauge")
-latest_cpu = filtered_df["cpu_percent"].iloc[-1] if not filtered_df.empty else 0
+def display_metric(col, title, df, column, unit=""):
+    if df.empty:
+        value, delta, percent = 0, 0, 0
+    else:
+        value = df[column].iloc[-1]
+        delta, percent = calculate_delta(df, column)
 
-fig_cpu_gauge = go.Figure(go.Indicator(
-    mode="gauge+number",
-    value=latest_cpu,
-    title={'text': "CPU Usage (%)"},
-    gauge={
-        'axis': {'range': [0, 100]},
-        'bar': {'color': "blue"},
-        'steps': [
-            {'range': [0, 50], 'color': "lightgreen"},
-            {'range': [50, 80], 'color': "yellow"},
-            {'range': [80, 100], 'color': "red"},
-        ],
-        'threshold': {'line': {'color': "black", 'width': 4}, 'value': latest_cpu}
-    }
-))
-st.plotly_chart(fig_cpu_gauge, use_container_width=True)
+    with col:
+        with st.container(border=True):
+            st.metric(title, f"{value:,.0f}{unit}", f"{delta:+,.0f} ({percent:+.2f}%)")
 
-#----------------------------------------------------
-# Node Utilization Gauge
-#----------------------------------------------------
-st.write("### Node Utilization Gauge")
-latest_node = filtered_df["node_utilization"].iloc[-1] if not filtered_df.empty else 0
+# ------------------- PLOTLY TIME SERIES FUNCTION -------------------
+def plot_timeseries(df, y_columns, title, colors=None):
+    if df.empty:
+        st.info("No data available for this filter.")
+        return
 
-fig_node_gauge = go.Figure(go.Indicator(
-    mode="gauge+number",
-    value=latest_node,
-    title={'text': "Node Utilization (%)"},
-    gauge={
-        'axis': {'range': [0, 100]},
-        'bar': {'color': "green"},
-        'steps': [
-            {'range': [0, 50], 'color': "lightgreen"},
-            {'range': [50, 80], 'color': "yellow"},
-            {'range': [80, 100], 'color': "red"},
-        ],
-        'threshold': {'line': {'color': "black", 'width': 4}, 'value': latest_node}
-    }
-))
-st.plotly_chart(fig_node_gauge, use_container_width=True)
+    fig = go.Figure()
 
-# ----------------------------------------------------
-# Derived Core-Hours Calculation
-# ----------------------------------------------------
-filtered_df["timestamp"] = pd.to_datetime(filtered_df["timestamp"])
+    if colors is None:
+        colors = [None] * len(y_columns)
 
-# Sort by timestamp 
-filtered_df = filtered_df.sort_values("timestamp").reset_index(drop=True)
+    for col, color in zip(y_columns, colors):
+        fig.add_trace(
+            go.Scatter(
+                x=df["timestamp"],
+                y=df[col],
+                mode="lines",
+                name=col.replace("_", " ").title(),
+                line=dict(width=2, color=color)
+            )
+        )
 
-# time difference between rows in hours
-filtered_df['time_diff_hours'] = filtered_df['timestamp'].diff().dt.total_seconds() / 3600
-filtered_df['time_diff_hours'] = filtered_df['time_diff_hours'].fillna(0)  # first diff NaN → 0
+    fig.update_layout(
+        title=title,
+        xaxis_title="Time",
+        yaxis_title="Value",
+        hovermode="x unified",
+        template="plotly_white",
+        height=400,
+    )
 
-# core_hours = cpu_used * time_diff_hours
-filtered_df['core_hours'] = filtered_df['cpu_used'] * filtered_df['time_diff_hours']
+    st.plotly_chart(fig, use_container_width=True)
 
-if "core_hours" in filtered_df.columns and not filtered_df.empty and filtered_df['core_hours'].sum() > 0:
+# ------------------- TITLE -------------------
+st.title("📊 HPC Resource Usage Overview")
 
-    st.write("### Core Hours Over Time")
+# ------------------- METRICS -------------------
+st.subheader("Latest Metrics (Live Snapshot)")
+c1, c2, c3, c4 = st.columns(4)
 
-    fig_ch, ax_ch = plt.subplots()
-    ax_ch.plot(filtered_df["timestamp"], filtered_df["core_hours"], linewidth=1.5)
-    ax_ch.set_xlabel("Time")
-    ax_ch.set_ylabel("Core Hours")
-    ax_ch.set_title("Core Hours Consumption Per Interval")
-    ax_ch.tick_params(axis='x', rotation=90)
+display_metric(c1, "CPU Usage (%)", filtered_df, "cpu_percent", "%")
+display_metric(c2, "Node Utilization (%)", filtered_df, "node_utilization", "%")
+display_metric(c3, "Jobs Running", filtered_df, "jobs_running")
+display_metric(c4, "Jobs Queued", filtered_df, "jobs_queued")
 
-    st.pyplot(fig_ch)
-else:
-    st.info("Core-hour data unavailable or insufficient for plotting.")
+# ------------------- GAUGE CHARTS -------------------
+st.subheader("Cluster Utilization Gauges")
 
+gc1, gc2 = st.columns(2)
 
-# ensuringg timestamp is datetime type
-filtered_df["timestamp"] = pd.to_datetime(filtered_df["timestamp"])
+# CPU GAUGE
+with gc1:
+    st.write("### CPU Utilization")
+    latest_cpu = filtered_df["cpu_percent"].iloc[-1] if not filtered_df.empty else 0
+    fig_cpu = go.Figure(go.Indicator(
+        mode="gauge+number",
+        value=latest_cpu,
+        gauge={
+            "axis": {"range": [0, 100]},
+            "steps": [
+                {"range": [0, 50], "color": "lightgreen"},
+                {"range": [50, 80], "color": "yellow"},
+                {"range": [80, 100], "color": "red"},
+            ],
+            "bar": {"color": "blue"}
+        }
+    ))
+    st.plotly_chart(fig_cpu, use_container_width=True)
 
-# Sort by timestamp
-filtered_df = filtered_df.sort_values("timestamp").reset_index(drop=True)
+# NODE GAUGE
+with gc2:
+    st.write("### Node Utilization")
+    latest_node = filtered_df["node_utilization"].iloc[-1] if not filtered_df.empty else 0
+    fig_node = go.Figure(go.Indicator(
+        mode="gauge+number",
+        value=latest_node,
+        gauge={
+            "axis": {"range": [0, 100]},
+            "steps": [
+                {"range": [0, 50], "color": "lightgreen"},
+                {"range": [50, 80], "color": "yellow"},
+                {"range": [80, 100], "color": "red"},
+            ],
+            "bar": {"color": "green"}
+        }
+    ))
+    st.plotly_chart(fig_node, use_container_width=True)
 
-# Calculate time difference between timestamps in hours
-filtered_df['time_diff_hours'] = filtered_df['timestamp'].diff().dt.total_seconds() / 3600
-filtered_df['time_diff_hours'] = filtered_df['time_diff_hours'].fillna(0)
+# ------------------- MODERN PLOTS -------------------
 
-# Calculate wait time = jobs_queued * time_diff_hours
-filtered_df['wait_time'] = filtered_df['jobs_queued'] * filtered_df['time_diff_hours']
+# JOB QUEUE
+st.subheader("🧵 Job Queue Over Time")
+plot_timeseries(
+    filtered_df,
+    ["jobs_running", "jobs_queued", "jobs_held", "jobs_exiting"],
+    title="Job Queue Trends",
+    colors=["blue", "orange", "purple", "red"]
+)
 
-if filtered_df['wait_time'].sum() > 0:
-    st.write("### Job Wait Time Over Time")
+# NODE STATE
+st.subheader("🖥 Node States Over Time")
+plot_timeseries(
+    filtered_df,
+    ["nodes_running", "nodes_offline", "nodes_total"],
+    title="Node State Trends",
+    colors=["green", "red", "gray"]
+)
 
-    fig_wait, ax_wait = plt.subplots()
-    ax_wait.plot(filtered_df["timestamp"], filtered_df["wait_time"], color="orange", linewidth=1.5, label="Wait Time per Interval (job-hours)")
-    ax_wait.set_xlabel("Time")
-    ax_wait.set_ylabel("Wait Time (job-hours)")
-    ax_wait.set_title("Job Wait Time Per Interval")
-    ax_wait.tick_params(axis='x', rotation=90)
-    ax_wait.legend()
-    st.pyplot(fig_wait)
-else:
-    st.info("Wait time data unavailable or insufficient for plotting.")
-
-#----------------------------------------------------
-# Job Queue Trends
-#----------------------------------------------------
-st.write("### Job Queue Dynamics")
+# EFFICIENCY
+st.subheader("⚡ Combined Efficiency Over Time")
 if not filtered_df.empty:
-    fig_jobs, ax_jobs = plt.subplots()
-    ax_jobs.plot(filtered_df["timestamp"], filtered_df["jobs_running"], label="Running", linewidth=1)
-    ax_jobs.plot(filtered_df["timestamp"], filtered_df["jobs_queued"], label="Queued", linewidth=1)
-    ax_jobs.plot(filtered_df["timestamp"], filtered_df["jobs_held"], label="Held", linewidth=1)
-    ax_jobs.plot(filtered_df["timestamp"], filtered_df["jobs_exiting"], label="Exiting", linewidth=1)
-    ax_jobs.set_xlabel("Time")
-    ax_jobs.set_ylabel("Number of Jobs")
-    ax_jobs.set_title("Jobs Over Time")
-    ax_jobs.legend()
-    ax_jobs.tick_params(axis='x', rotation=90)
-    st.pyplot(fig_jobs)
-else:
-    st.write("No job queue data available for selected filter.")
+    filtered_df["efficiency"] = (
+        filtered_df["cpu_percent"] * filtered_df["node_utilization"]
+    ) / 100
 
-#----------------------------------------------------
-# Node States Over Time
-#----------------------------------------------------
-st.write("### Node States Over Time")
-if not filtered_df.empty:
-    fig_states, ax_states = plt.subplots()
-    ax_states.plot(filtered_df["timestamp"], filtered_df["nodes_running"], label="Running", linewidth=1.2)
-    ax_states.plot(filtered_df["timestamp"], filtered_df["nodes_offline"], label="Offline", linewidth=1.2)
-    ax_states.set_xlabel("Time")
-    ax_states.set_ylabel("Number of Nodes")
-    ax_states.set_title("Node States Over Time")
-    ax_states.legend()
-    ax_states.tick_params(axis='x', rotation=90)
-    st.pyplot(fig_states)
-else:
-    st.write("No node state data available for selected filter.")
+plot_timeseries(
+    filtered_df,
+    ["efficiency"],
+    title="Cluster Efficiency Trend",
+    colors=["red"]
+)
 
-#----------------------------------------------------
-# Combined Efficiency
-#----------------------------------------------------
-st.write("### Combined Efficiency Over Time")
-
-if not filtered_df.empty:
-    temp = filtered_df.copy()
-    temp["combined_efficiency"] = (temp["node_utilization"] * temp["cpu_percent"]) / 100
-
-    fig_eff, ax_eff = plt.subplots()
-    ax_eff.plot(temp["timestamp"], temp["combined_efficiency"], color="tab:red", linewidth=1.5)
-    ax_eff.set_xlabel("Time")
-    ax_eff.set_ylabel("Efficiency (%)")
-    ax_eff.set_title("Combined Efficiency (Node × CPU) Over Time")
-    ax_eff.tick_params(axis='x', rotation=90)
-    st.pyplot(fig_eff)
-
-#----------------------------------------------------
-# Latest Snapshot
-#----------------------------------------------------
-st.write("### Latest Snapshot")
-st.write(filtered_df.tail(1))
-
-st.caption("Data source: uploaded processed_logs.csv")
-
-
-
-
+# ------------------- RAW DATA -------------------
+with st.expander("📄 Raw Data (Filtered)"):
+    st.dataframe(filtered_df.tail(1000))
