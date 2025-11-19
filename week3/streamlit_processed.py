@@ -9,7 +9,7 @@ from datetime import datetime
 st.set_page_config(page_title="HPC Cluster Dashboard", layout="wide")
 
 # ------------------- SETTINGS -------------------
-DOWNSAMPLE_POINTS = 1000  # max points to plot per timeseries (tune if needed)
+DOWNSAMPLE_POINTS = 1000  # max points to plot per timeseries 
 CSV_NAME = "processed_logs.csv"
 
 # ------------------- RESOLVE CSV PATH SAFELY -------------------
@@ -254,6 +254,10 @@ plot_timeseries(filtered_df, ["nodes_running", "nodes_offline", "nodes_down", "n
 st.subheader("⚡ Efficiency Trend")
 if "efficiency" in filtered_df.columns:
     plot_timeseries(filtered_df, ["efficiency"], "Cluster Efficiency (CPU × Node Util)")
+
+#System stats
+display_log_file("recentlog.log")
+
 
 # Raw Data (collapsible) - limit rows to keep UI responsive
 with st.expander("📄 View Raw Filtered Data (last 1000 rows)", expanded=False):
