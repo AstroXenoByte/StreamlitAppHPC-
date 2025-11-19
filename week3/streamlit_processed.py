@@ -7,6 +7,16 @@ from datetime import datetime
 
 # ------------------- PAGE CONFIG -------------------
 st.set_page_config(page_title="HPC Cluster Dashboard", layout="wide")
+st.markdown("""
+    <style>
+    :root {
+        --primary-color: #4F8BF9;
+        --background-color: #0e1117;
+        --secondary-background-color: #262730;
+        --text-color: #fafafa;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # ------------------- SETTINGS -------------------
 DOWNSAMPLE_POINTS = 1000  # max points to plot per timeseries 
