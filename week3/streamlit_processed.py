@@ -256,7 +256,63 @@ if "efficiency" in filtered_df.columns:
     plot_timeseries(filtered_df, ["efficiency"], "Cluster Efficiency (CPU × Node Util)")
 
 #System stats
-display_log_file("recentlog.log")
+def get_log_path(filename="cluster.log"):
+    """
+    Returns the path of a .log file located in the same directory as processed_logs.csv
+    """
+    base_path = os.path.dirname(get_csv_path())  # reuse your existing function
+    log_path = os.path.join(base_path, filename)
+
+    if not os.path.exists(log_path):
+        st.error(f"❌ Log file `{filename}` not found in: {base_path}")
+        return None
+    return log_path
+
+
+def display_log_file(filename="cluster.log", max_lines=2000):
+    """
+    Reads and displays last N lines of a log file efficiently.
+    """
+    log_path = get_log_path(filename)
+    if log_path is None:
+        return
+
+    st.subheader(f"📜 Log Viewer: {filename}")
+
+    try:
+        with open(log_path, "rb") as f:
+            # Go to the end
+            f.seek(0, os.SEEK_END)
+            file_size = f.tell()
+
+            # Efficient backward reader
+            block_size = 2048
+            data = []
+            lines_found = 0
+
+            while file_size > 0 and lines_found < max_lines:
+                read_size = min(block_size, file_size)
+                file_size -= read_size
+                f.seek(file_size)
+                block = f.read(read_size).decode("utf-8", errors="ignore")
+                data.append(block)
+                lines_found = sum(chunk.count("\n") for chunk in data)
+
+        # Extract tail
+        final_text = "".join(data).splitlines()[-max_lines:]
+
+        st.code("\n".join(final_text), language="bash")
+
+    except Exception as e:
+        st.error(f"⚠️ Error reading log file: {e}")
+# -----------------------------------------
+# Log File Viewer
+# -----------------------------------------
+with st.expander("📄 View Cluster Logs"):
+    log_filename = st.text_input("Log filename:", "cluster.log")
+    if st.button("Load Log"):
+        display_log_file(log_filename)
+
 
 
 # Raw Data (collapsible) - limit rows to keep UI responsive
