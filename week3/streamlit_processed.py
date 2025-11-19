@@ -24,7 +24,7 @@ def get_csv_path():
         if os.path.exists(p):
             return p
     st.error(
-        "❌ **processed_logs.csv not found!**\n\n"
+        " **processed_logs.csv not found!**\n\n"
         "Looked in script folder, parent folder, and current working directory.\n\n"
         "Place `processed_logs.csv` next to this script or upload it in your deployment."
     )
@@ -192,11 +192,11 @@ filtered_df = compute_efficiency(filtered_df)
 # Header summary
 start_ts = filtered_df["timestamp"].min()
 end_ts = filtered_df["timestamp"].max()
-st.title("📊 HPC Cluster Resource Monitoring Dashboard")
+st.title(" HPC Cluster Resource Monitoring Dashboard")
 st.markdown(f"**Data range:** {start_ts.strftime('%Y-%m-%d %H:%M')} → {end_ts.strftime('%Y-%m-%d %H:%M')} | **Filtered:** {len(filtered_df):,} rows")
 
 # Latest metrics row (vectorized access)
-st.subheader("🔥 Latest Snapshot")
+st.subheader(" Latest Snapshot")
 c1, c2, c3, c4 = st.columns(4)
 
 latest_row = filtered_df.iloc[-1]
@@ -231,7 +231,7 @@ display_metric(c3, "Jobs Running", run_last, run_delta, run_pct_str)
 display_metric(c4, "Jobs Queued", que_last, que_delta, que_pct_str)
 
 # Gauges (use smaller snapshot references if not available)
-st.subheader("🎯 Current Utilization Gauges")
+st.subheader(" Current Utilization Gauges")
 g1, g2 = st.columns(2)
 
 with g1:
@@ -245,13 +245,13 @@ with g2:
     st.plotly_chart(fig_node, use_container_width=True, config=PLOT_CONFIG)
 
 # Time Series Charts (downsampled inside function)
-st.subheader("📈 Job Queue Trends")
+st.subheader(" Job Queue Trends")
 plot_timeseries(filtered_df, ["jobs_running", "jobs_queued", "jobs_held", "jobs_exiting"], "Jobs Over Time")
 
-st.subheader("🖥 Node States")
+st.subheader(" Node States")
 plot_timeseries(filtered_df, ["nodes_running", "nodes_offline", "nodes_down", "nodes_idle", "nodes_total"], "Node States Over Time")
 
-st.subheader("⚡ Efficiency Trend")
+st.subheader(" Efficiency Trend")
 if "efficiency" in filtered_df.columns:
     plot_timeseries(filtered_df, ["efficiency"], "Cluster Efficiency (CPU × Node Util)")
 
@@ -264,7 +264,7 @@ def get_log_path(filename="cluster.log"):
     log_path = os.path.join(base_path, filename)
 
     if not os.path.exists(log_path):
-        st.error(f"❌ Log file `{filename}` not found in: {base_path}")
+        st.error(f" Log file `{filename}` not found in: {base_path}")
         return None
     return log_path
 
@@ -277,7 +277,7 @@ def display_log_file(filename="cluster.log", max_lines=2000):
     if log_path is None:
         return
 
-    st.subheader(f"📜 Log Viewer: {filename}")
+    st.subheader(f" Log Viewer: {filename}")
 
     try:
         with open(log_path, "rb") as f:
@@ -304,11 +304,11 @@ def display_log_file(filename="cluster.log", max_lines=2000):
         st.code("\n".join(final_text), language="bash")
 
     except Exception as e:
-        st.error(f"⚠️ Error reading log file: {e}")
+        st.error(f" Error reading log file: {e}")
 # -----------------------------------------
 # Log File Viewer
 # -----------------------------------------
-with st.expander("📄 View Cluster Logs"):
+with st.expander(" View Cluster Logs"):
     log_filename = st.text_input("Log filename:", "cluster.log")
     if st.button("Load Log"):
         display_log_file(log_filename)
@@ -316,5 +316,5 @@ with st.expander("📄 View Cluster Logs"):
 
 
 # Raw Data (collapsible) - limit rows to keep UI responsive
-with st.expander("📄 View Raw Filtered Data (last 1000 rows)", expanded=False):
+with st.expander(" View Raw Filtered Data (last 1000 rows)", expanded=False):
     st.dataframe(filtered_df.tail(1000), use_container_width=True)
