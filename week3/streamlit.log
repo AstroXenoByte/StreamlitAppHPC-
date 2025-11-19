@@ -1,0 +1,165 @@
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://127.0.0.1:8502
+
+2025-11-08 15:08:20.666 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "/home/runtime/.local/lib/python3.12/site-packages/streamlit/dataframe_util.py", line 822, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/table.pxi", line 4795, in pyarrow.lib.Table.from_pandas
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 637, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 625, in convert_column
+    raise e
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 619, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert Timestamp('2021-05-29 03:46:47.227186688') with type Timestamp: tried to convert to int64", 'Conversion failed for column timestamp with type object')
+/home/runtime/.local/lib/python3.12/site-packages/streamlit/elements/pyplot.py:225: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
+  fig.savefig(image, **kwargs)
+2025-11-08 15:10:27.601 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "/home/runtime/.local/lib/python3.12/site-packages/streamlit/dataframe_util.py", line 822, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/table.pxi", line 4795, in pyarrow.lib.Table.from_pandas
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 637, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 625, in convert_column
+    raise e
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 619, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert Timestamp('2021-05-29 03:46:47.227186688') with type Timestamp: tried to convert to int64", 'Conversion failed for column timestamp with type object')
+/home/runtime/.local/lib/python3.12/site-packages/streamlit/elements/pyplot.py:225: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
+  fig.savefig(image, **kwargs)
+2025-11-08 15:20:56.028 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "/home/runtime/.local/lib/python3.12/site-packages/streamlit/dataframe_util.py", line 822, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/table.pxi", line 4795, in pyarrow.lib.Table.from_pandas
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 637, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 625, in convert_column
+    raise e
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 619, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert Timestamp('2021-05-29 03:46:47.227186688') with type Timestamp: tried to convert to int64", 'Conversion failed for column timestamp with type object')
+/home/runtime/.local/lib/python3.12/site-packages/streamlit/elements/pyplot.py:225: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
+  fig.savefig(image, **kwargs)
+2025-11-08 15:21:44.906 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "/home/runtime/.local/lib/python3.12/site-packages/streamlit/dataframe_util.py", line 822, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/table.pxi", line 4795, in pyarrow.lib.Table.from_pandas
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 637, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 625, in convert_column
+    raise e
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 619, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert Timestamp('2021-05-29 03:46:47.227186688') with type Timestamp: tried to convert to int64", 'Conversion failed for column timestamp with type object')
+/home/runtime/.local/lib/python3.12/site-packages/streamlit/elements/pyplot.py:225: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
+  fig.savefig(image, **kwargs)
+2025-11-08 15:23:15.882 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "/home/runtime/.local/lib/python3.12/site-packages/streamlit/dataframe_util.py", line 822, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/table.pxi", line 4795, in pyarrow.lib.Table.from_pandas
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 637, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 625, in convert_column
+    raise e
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 619, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert Timestamp('2021-05-29 03:46:47.227186688') with type Timestamp: tried to convert to int64", 'Conversion failed for column timestamp with type object')
+/home/runtime/.local/lib/python3.12/site-packages/streamlit/elements/pyplot.py:225: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
+  fig.savefig(image, **kwargs)
+2025-11-08 15:24:20.631 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "/home/runtime/.local/lib/python3.12/site-packages/streamlit/dataframe_util.py", line 822, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/table.pxi", line 4795, in pyarrow.lib.Table.from_pandas
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 637, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 625, in convert_column
+    raise e
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 619, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert Timestamp('2021-05-29 03:46:47.227186688') with type Timestamp: tried to convert to int64", 'Conversion failed for column timestamp with type object')
+/home/runtime/.local/lib/python3.12/site-packages/streamlit/elements/pyplot.py:225: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
+  fig.savefig(image, **kwargs)
+2025-11-08 15:27:26.199 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "/home/runtime/.local/lib/python3.12/site-packages/streamlit/dataframe_util.py", line 822, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/table.pxi", line 4795, in pyarrow.lib.Table.from_pandas
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 637, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 625, in convert_column
+    raise e
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 619, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert Timestamp('2021-05-29 03:46:47.227186688') with type Timestamp: tried to convert to int64", 'Conversion failed for column timestamp with type object')
+/home/runtime/.local/lib/python3.12/site-packages/streamlit/elements/pyplot.py:225: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
+  fig.savefig(image, **kwargs)
+2025-11-08 15:28:40.853 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "/home/runtime/.local/lib/python3.12/site-packages/streamlit/dataframe_util.py", line 822, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/table.pxi", line 4795, in pyarrow.lib.Table.from_pandas
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 637, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 625, in convert_column
+    raise e
+  File "/home/runtime/.local/lib/python3.12/site-packages/pyarrow/pandas_compat.py", line 619, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert Timestamp('2021-05-29 03:46:47.227186688') with type Timestamp: tried to convert to int64", 'Conversion failed for column timestamp with type object')
+/home/runtime/.local/lib/python3.12/site-packages/streamlit/elements/pyplot.py:225: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
+  fig.savefig(image, **kwargs)
