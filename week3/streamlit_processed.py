@@ -7,16 +7,72 @@ from datetime import datetime
 
 # ------------------- PAGE CONFIG -------------------
 st.set_page_config(page_title="HPC Cluster Dashboard", layout="wide")
-st.markdown("""
+def enable_ultra_black_theme():
+    black_css = """
     <style>
-    :root {
-        --primary-color: #4F8BF9;
-        --background-color: #0e1117;
-        --secondary-background-color: #262730;
-        --text-color: #fafafa;
+    /* Global background */
+    html, body, [data-testid="stAppViewContainer"] {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+    }
+
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background-color: #000000 !important;
+    }
+
+    /* Text */
+    * {
+        color: #ffffff !important;
+    }
+
+    /* Cards, boxes, containers */
+    .stApp, .stCard, .css-1v3fvcr, .css-12w0qpk, .css-1d391kg {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+    }
+
+    /* Metric boxes */
+    div[data-testid="metric-container"] {
+        background-color: #111111 !important;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    /* Buttons */
+    button, .stButton>button {
+        background-color: #111111 !important;
+        color: white !important;
+        border: 1px solid #333333 !important;
+        border-radius: 8px !important;
+    }
+    button:hover, .stButton>button:hover {
+        background-color: #222222 !important;
+        border-color: #555555 !important;
+    }
+
+    /* Inputs */
+    input, textarea, select, .stTextInput input, .stSelectbox select {
+        background-color: #111111 !important;
+        color: white !important;
+        border: 1px solid #333333 !important;
+        border-radius: 6px !important;
+    }
+
+    /* DataFrames */
+    .stDataFrame, .stTable {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+    }
+
+    /* Plotly charts */
+    .js-plotly-plot .plot-container {
+        background-color: #000000 !important;
     }
     </style>
-""", unsafe_allow_html=True)
+    """
+    st.markdown(black_css, unsafe_allow_html=True)
+enable_ultra_black_theme()
 
 # ------------------- SETTINGS -------------------
 DOWNSAMPLE_POINTS = 1000  # max points to plot per timeseries 
