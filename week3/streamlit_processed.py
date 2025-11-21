@@ -147,9 +147,9 @@ except Exception as e:
 
 # Sidebar filters (compute options once)
 with st.sidebar:
-    st.title("🖥 HPC Cluster Dashboard")
+    st.title(" HPC Cluster Dashboard")
     st.markdown("---")
-    st.header("⚙️ Time Filters")
+    st.header(" Time Filters")
     if df.empty:
         st.warning("No data available")
         st.stop()
