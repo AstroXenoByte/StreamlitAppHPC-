@@ -45,7 +45,7 @@ def load_data(csv_path: str):
     except Exception as e:
         # Fall back to safe load + conversion
         df = pd.read_csv(csv_path, low_memory=True)
-        df["timestamp"] = pd.to_datetime(df.get("timestamp"), errors="coerce", infer_datetime_format=True)
+        df["timestamp"] = pd.to_datetime(df.get("timestamp"), errors="coerce")
 
     # basic validation
     if "timestamp" not in df.columns:
