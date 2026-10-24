@@ -52,6 +52,7 @@ Raw PBS Logs → ETL Pipeline → Analytics Metrics → Streamlit Dashboard → 
 - Pandas, NumPy
 - Nginx (for production deployment, optional)
 - Linux environment recommended
+- Sebowa cloud (for production deployment, optional)
 
 ### Run locally (development)
 pip install -r requirements.txt
